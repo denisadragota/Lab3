@@ -1,12 +1,16 @@
 package com.company.Model;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Teacher extends Person{
     private List<Course> courses;
     private long teacherId;
 
-    public Teacher(List<Course> courses) {
-        this.courses = courses;
+    public Teacher(long teacherId, String firstName, String lastName) {
+        this.teacherId=teacherId;
+        this.courses = new ArrayList<>();
+        this.firstName=firstName;
+        this.lastName=lastName;
     }
 
     public List<Course> getCourses() {

@@ -1,5 +1,6 @@
 package com.company.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,10 +9,12 @@ public class Student extends Person{
     private int totalCredits;
     private List<Course> enrolledCourses;
 
-    public Student(long studentId, int totalCredits, List<Course> enrolledCourses) {
+    public Student(long studentId,String firstName, String lastName) {
         this.studentId = studentId;
-        this.totalCredits = totalCredits;
-        this.enrolledCourses = enrolledCourses;
+        this.totalCredits = 0;
+        this.enrolledCourses = new ArrayList<>(){};
+        this.firstName=firstName;
+        this.lastName=lastName;
     }
 
     @Override

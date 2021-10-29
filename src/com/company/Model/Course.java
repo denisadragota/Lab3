@@ -1,4 +1,5 @@
 package com.company.Model;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Course {
@@ -9,11 +10,12 @@ public class Course {
     private List<Student> studentsEnrolled;
     private int credits;
 
-    public Course(String name, Person teacher, int maxEnrollment, List<Student> studentsEnrolled, int credits) {
+    public Course(long courseId,String name, Person teacher, int maxEnrollment,  int credits) {
+        this.courseId=courseId;
         this.name = name;
         this.teacher = teacher;
         this.maxEnrollment = maxEnrollment;
-        this.studentsEnrolled = studentsEnrolled;
+        this.studentsEnrolled = new ArrayList<>();
         this.credits = credits;
     }
 

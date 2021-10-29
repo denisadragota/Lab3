@@ -1,6 +1,5 @@
 package com.company.Controller;
 
-
 import com.company.Model.Course;
 import com.company.Model.Student;
 import com.company.Model.Teacher;
@@ -25,6 +24,16 @@ public class RegistrationSystem {
     public boolean register(Course course, Student student){
 
         List<Student> courseStudents =  course.getStudentsEnrolled();
+        //check if course exists
+        if(coursesRepo.findOne(course.getCourseId())==null)
+        {
+            return false;
+        }
+        //check if student exists
+        if(studentsRepo.findOne(student.getStudentId())==null)
+        {
+            return false;
+        }
 
         //check if course has free places
         if (courseStudents.size() == course.getMaxEnrollment()) {
@@ -101,17 +110,33 @@ public class RegistrationSystem {
     }
     //deleted course from CourseRepo, from the Students and from the teacher
     public boolean deleteCourseFromTeacher(Teacher teacher, Course course) {
+
+        //check if course exists
+        if(coursesRepo.findOne(course.getCourseId())==null)
+        {
+            return false;
+        }
+        //check if teacher exists
+        if(teachersRepo.findOne(teacher.getTeacherId())==null)
+        {
+            return false;
+        }
+
+        //check if course actually is in the teacher's list of courses
         //delete course from teacher's list
+        boolean found=false;
         List<Course> courseList = teacher.getCourses();
         for (Course c : courseList) {
             if (c.compareTo(course)) {
-
+                found=true;
                 //update teacher repo
                 courseList.remove(c);
                 teacher.setCourses(courseList);
                 teachersRepo.update(teacher);
             }
         }
+        if(!found)
+            return false;
 
         //delete course from Course Repo
         coursesRepo.delete(course.getCourseId());
@@ -147,5 +172,5 @@ public class RegistrationSystem {
         return this.teachersRepo.findOne(id);
     }
 
-    
+
 }
