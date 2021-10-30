@@ -4,8 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * class Student extends abstract class Person
+ * stores and provides information about a student's : id, first name, last name,
+ * total credits number and enrolled courses
+ *
+ * @version
+ *          30.10.2021
+ * @author
+ *          Denisa Dragota
+ */
 public class Student extends Person{
-    private long studentId;
+    private long studentId; //unique identifier of an object
     private int totalCredits;
     private List<Course> enrolledCourses;
 
@@ -49,7 +59,14 @@ public class Student extends Person{
     public void setEnrolledCourses(List<Course> enrolledCourses) {
         this.enrolledCourses = enrolledCourses;
     }
+
+    /**
+     * @param other, Student object to compare with
+     * @return true if objects are equal, else false
+     * comparation based on id (unique identifier)
+     */
     public boolean compareTo(Student other) {
+        /* comparing id */
         if(this.studentId ==  other.getStudentId())
             return true;
         return false;

@@ -13,6 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * RegistrationSystem class
+ * storing repo lists of: students, teachers, courses
+ *
+ * Functionalities: enrolling a student to a course, showing courses with free places,
+ * showing all courses, showing all students enrolled to a course, deleting a course from a teacher,
+ * updating students' total credits number after updating a course credits
+ *
+ * @version
+ *          30.10.2021
+ * @author
+ *          Denisa Dragota
+ */
 public class RegistrationSystem {
     private StudentRepository studentsRepo;
     private TeacherRepository teachersRepo;
@@ -24,10 +37,19 @@ public class RegistrationSystem {
         this.coursesRepo = coursesRepo;
     }
 
+    /**
+     * @param course , Course object
+     * @param student, Student object
+     * @return true if successfully enroled, else false
+     * @throws InputException if course or student params not existing in repo lists
+     * or if student can not enroll to that given course under the following conditions
+     * Conditions: student can have maximal 30 credits and a course has a maximum number of enrolled students,
+     * student can not be enrolled multiple times to the same course
+     */
     public boolean register(Course course, Student student) throws InputException {
 
         List<Student> courseStudents =  course.getStudentsEnrolled();
-        //check if course exists
+        //check if course exists in repo
         try {
             if (coursesRepo.findOne(course.getCourseId()) == null) {
                 throw new InputException("Non-existing course id!");
@@ -35,7 +57,7 @@ public class RegistrationSystem {
         } catch(NullException e){
             System.out.println(e.getMessage());
         }
-        //check if student exists
+        //check if student exists in repo
         try{
             if(studentsRepo.findOne(student.getStudentId())==null)
             {
@@ -89,18 +111,29 @@ public class RegistrationSystem {
 
         return true;
     }
+
+    /**
+     * @return courses with free places
+     * find courses from the course repo where number of enrolled students < maximum enroll limit
+     */
     public List<Course> retrieveCoursesWithFreePlaces(){
         List<Course> freePlaces = new ArrayList<>();
 
+        /* looping through courses in repo list */
         for (Course c:coursesRepo.findAll()){
-
+            /* comparing number of enrolled students with the limit */
             if(c.getStudentsEnrolled().size()<c.getMaxEnrollment())
                 freePlaces.add(c);
         }
         return freePlaces;
     }
 
+    /**
+     * @param course Course object
+     * @return list of students enrolled to the given course, or null if course is NULL
+     */
     public List<Student> retrieveStudentsEnrolledForACourse(Course course) {
+        /* find course in the course repo */
         try {
             if (coursesRepo.findOne(course.getCourseId()) != null) {
                 return course.getStudentsEnrolled();
@@ -112,7 +145,18 @@ public class RegistrationSystem {
     }
 
 
-    //deleted course from CourseRepo, from the Students and from the teacher
+    /**
+     * @param teacher  Teacher object from whom we delete a course
+     * @param course  Course object, from the teacher's list, to be deleted
+     * @return true if successfully deleted
+     * @throws InputException if teacher or course do not exist in te repo lists,
+     * or if the course does not correspond to that teacher
+     * deleting course from the teacher's teaching list, from the students enrolled list and from the courses repo
+     *
+     * Removing course from the teacher's courses list, from the students' enrolled lists and from the course repo
+     * Update number of credits of certain students
+     */
+
     public boolean deleteCourseFromTeacher(Teacher teacher, Course course) throws InputException{
 
         //check if course exists
@@ -177,6 +221,10 @@ public class RegistrationSystem {
         }
     }
 
+    /**
+     * Recalculate the sum of credits provided from the enrolled courses of the students
+     * Update the credits sum for each student
+     */
     public void updateStudentsCredits() {
         List<Student> stud = this.getAllStudents();
         //looping through all students of the repo
@@ -202,6 +250,11 @@ public class RegistrationSystem {
         }
     }
 
+    /**
+     * @param c Course object, which credits were updated
+     * Updating repo with the updated course
+     * Updating students credits
+     */
     public void modifyCredits(Course c){
         /* update course in the repo */
         try {
@@ -215,6 +268,9 @@ public class RegistrationSystem {
     }
 
 
+    /**
+     * @return student list from the student repo
+     */
     public List<Student> getAllStudents(){
         ArrayList<Student> allStudents= new ArrayList<>();
         for (Student s: this.studentsRepo.findAll()){
@@ -223,6 +279,9 @@ public class RegistrationSystem {
         return allStudents;
     }
 
+    /**
+     * @return courses list from the course repo
+     */
     public List<Course> getAllCourses(){
         ArrayList<Course> allCourses= new ArrayList<>();
         for (Course c: this.coursesRepo.findAll()){
@@ -231,6 +290,9 @@ public class RegistrationSystem {
         return allCourses;
     }
 
+    /**
+     * @return teachers list from teh teacher repo
+     */
     public List<Teacher> getAllTeachers(){
         ArrayList<Teacher> allTeachers= new ArrayList<>();
         for (Teacher t: this.teachersRepo.findAll()){
@@ -238,6 +300,12 @@ public class RegistrationSystem {
         }
         return allTeachers;
     }
+
+
+    /**
+     * @param id of a Student object
+     * @return Student object from the student repo list with the given id
+     */
     public Student findOneStudent(long id){
         try {
             return this.studentsRepo.findOne(id);
@@ -248,6 +316,10 @@ public class RegistrationSystem {
 
     }
 
+    /**
+     * @param id of a Course object
+     * @return Course object from the course repo list with the given id
+     */
     public Course findOneCourse(long id){
         try {
             return this.coursesRepo.findOne(id);
@@ -257,6 +329,10 @@ public class RegistrationSystem {
         }
     }
 
+    /**
+     * @param id of a Teacher object
+     * @return Teacher object from the teacher repo list with the given id
+     */
     public Teacher findOneTeacher(long id){
         try{
             return this.teachersRepo.findOne(id);

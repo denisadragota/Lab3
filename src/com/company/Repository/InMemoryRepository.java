@@ -1,8 +1,16 @@
 package com.company.Repository;
-
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @param <T> , a class from Model package
+ * InMemoryRepository class implementing ICrudRepository
+ * storing and updating information about the list of T objects
+ *
+ * @version
+ *              30.10.2021
+ * @author
+ *              Denisa Dragota
+ */
 public abstract class InMemoryRepository<T> implements ICrudRepository<T> {
     protected List<T> repoList;
 
@@ -11,7 +19,9 @@ public abstract class InMemoryRepository<T> implements ICrudRepository<T> {
         this.repoList = repoList;
     }
 
-
+    /**
+     * @return all entities
+     */
     @Override
     public Iterable<T> findAll() {
 

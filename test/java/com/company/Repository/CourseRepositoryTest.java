@@ -14,6 +14,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * CourseRepositoryTest class
+ * testing CourseRepository class
+ * @version
+ *          30.10.2021
+ * @author
+ *          Denisa Dragota
+ */
 class CourseRepositoryTest {
     private Teacher teacher1;
     private Teacher teacher2;
@@ -24,6 +32,9 @@ class CourseRepositoryTest {
 
     private CourseRepository course_repo;
 
+    /**
+     * create instances for testing before each test method
+     */
     @BeforeEach
     void createInstances(){
 
@@ -41,6 +52,10 @@ class CourseRepositoryTest {
         courses.add(course2);
         course_repo=new CourseRepository(courses);
     }
+
+    /**
+     * test findAll() method
+     */
     @Test
     void findAll(){
         /*creating the expected result list */
@@ -52,6 +67,9 @@ class CourseRepositoryTest {
         assertArrayEquals(courses,((Collection<?>)course_repo.findAll()).toArray());
     }
 
+    /**
+     * test findOne() method
+     */
     @Test
     void findOne() {
         /* search for existing course id */
@@ -69,6 +87,9 @@ class CourseRepositoryTest {
         }
     }
 
+    /**
+     * test save() method
+     */
     @Test
     void save() {
 
@@ -94,6 +115,9 @@ class CourseRepositoryTest {
         }
     }
 
+    /**
+     * test update() method
+     */
     @Test
     void update() {
         /* try to update a course that does not exist in the repo */
@@ -116,6 +140,9 @@ class CourseRepositoryTest {
         }
     }
 
+    /**
+     * test delete() method
+     */
     @Test
     void delete(){
 

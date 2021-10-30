@@ -1,6 +1,14 @@
 package com.company.Model;
 
-public class Person {
+/**
+ * Abstract class Person
+ * stores and provides information about a person's: first and last name
+ * @version
+ *          30.10.2021
+ * @author
+ *          Denisa Dragota
+ */
+public abstract class Person {
     protected String firstName;
     protected String lastName;
 

@@ -2,9 +2,19 @@ package com.company.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * class Teacher extends abstract class Person
+ * stores and provides information about a teacher's: id, first name, last name, list of courses
+ *
+ * @version
+ *
+ *          30.10.2021
+ * @author
+ *          Denisa Dragota
+ */
 public class Teacher extends Person{
+    private long teacherId; //unique identifier of an object
     private List<Course> courses;
-    private long teacherId;
 
     public Teacher(long teacherId, String firstName, String lastName) {
         this.teacherId=teacherId;
@@ -36,5 +46,17 @@ public class Teacher extends Person{
                 ", lastName='" + lastName + '\'' +
                 ", teacherId=" + teacherId +
                 '}';
+    }
+
+    /**
+     * @param other, Teacher object to compare with
+     * @return true if objects are equal, else false
+     * comparation based on id (unique identifier)
+     */
+    public boolean compareTo(Teacher other) {
+        /* comparing id */
+        if(this.teacherId ==  other.getTeacherId())
+            return true;
+        return false;
     }
 }

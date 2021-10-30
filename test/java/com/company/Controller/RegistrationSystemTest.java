@@ -16,6 +16,15 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * RegistrationSystemTest class
+ * test RegistrationSystem class
+ *
+ * @version
+ *          30.10.2021
+ * @author
+ *          Denisa Dragota
+ */
 class RegistrationSystemTest {
     private Teacher teacher1;
     private Teacher teacher2;
@@ -35,6 +44,9 @@ class RegistrationSystemTest {
 
     private RegistrationSystem regSystem;
 
+    /**
+     * create instances for testing before each test method
+     */
     @BeforeEach
     void createInstances() {
 
@@ -94,6 +106,9 @@ class RegistrationSystemTest {
         regSystem = new RegistrationSystem(student_repo, teacher_repo, course_repo);
     }
 
+    /**
+     * test register() method()
+     */
     @Test
     void register() {
         /* 1. register a student to a non-existing course in the Course Repo */
@@ -151,6 +166,9 @@ class RegistrationSystemTest {
         }
     }
 
+    /**
+     * test retrieveCoursesWithFreePlaces() method
+     */
     @Test
     void retrieveCoursesWithFreePlaces() {
         /*enroll students to courses */
@@ -172,6 +190,9 @@ class RegistrationSystemTest {
         assertArrayEquals(freeplacesCourses, regSystem.retrieveCoursesWithFreePlaces().toArray());
     }
 
+    /**
+     * test retrieveStudentsEnrolledForACourse() method
+     */
     @Test
     void retrieveStudentsEnrolledForACourse() {
         /* register 3 students to course3 */
@@ -198,6 +219,9 @@ class RegistrationSystemTest {
         assertEquals(new ArrayList<Student>(), regSystem.retrieveStudentsEnrolledForACourse(course2));
     }
 
+    /**
+     * test getAllCourses() method
+     */
     @Test
     void getAllCourses() {
         /*creating the expected result list */
@@ -209,6 +233,9 @@ class RegistrationSystemTest {
         assertArrayEquals(courses, regSystem.getAllCourses().toArray());
     }
 
+    /**
+     * test modifyCredits() method
+     */
     @Test
     void modifyCredits() {
         /* enrolling a student to a course */
@@ -232,6 +259,9 @@ class RegistrationSystemTest {
 
     }
 
+    /**
+     * test deleteCourseFromTeacher() method
+     */
     @Test
     void deleteCourseFromTeacher() {
         /* enroll students to a course*/

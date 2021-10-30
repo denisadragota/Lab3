@@ -15,6 +15,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * StudentRepositoryTest class
+ * testing StudentRepository class
+ * @version
+ *          30.10.2021
+ * @author
+ *          Denisa Dragota
+ */
 class StudentRepositoryTest {
 
     private Student student1;
@@ -23,7 +31,9 @@ class StudentRepositoryTest {
     private Student student4;
     private StudentRepository stud_repo;
 
-    /* data set to use for each test */
+    /**
+     * create instances for testing before each test method
+     */
     @BeforeEach
     void createInstances(){
         /*creating instances*/
@@ -39,6 +49,9 @@ class StudentRepositoryTest {
         stud_repo=new StudentRepository(students);
     }
 
+    /**
+     * test findAll() method
+     */
     @Test
     void findAll(){
         /*creating the expected result list */
@@ -50,6 +63,9 @@ class StudentRepositoryTest {
         assertArrayEquals(students,((Collection<?>)stud_repo.findAll()).toArray());
     }
 
+    /**
+     * test findOne() method
+     */
     @Test
     void findOne() {
         /* search for existing student id */
@@ -67,6 +83,9 @@ class StudentRepositoryTest {
         }
     }
 
+    /**
+     * test save() method
+     */
     @Test
     void save(){
         /* save stud_repo size at the beginning */
@@ -91,6 +110,9 @@ class StudentRepositoryTest {
         }
     }
 
+    /**
+     * test update() method
+     */
     @Test
     void update(){
         /* try to update a student that does not exist in the repo */
@@ -112,6 +134,9 @@ class StudentRepositoryTest {
         }
     }
 
+    /**
+     * test delete() method
+     */
     @Test
     void delete() {
         /* try to delete a non-existing studentId in the repo */

@@ -2,9 +2,20 @@ package com.company.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * class Course
+ * stores and provides information about a course's: name, id, teacher, maximal enrollment number,
+ * enrolled students, number of credits
+ *
+ * @version
+ *          30.10.2021
+ *
+ * @author
+ *          Denisa Dragota
+ */
 public class Course {
     private String name;
-    private long courseId;
+    private long courseId; //unique identifier of an object
     private Person teacher;
     private int maxEnrollment;
     private List<Student> studentsEnrolled;
@@ -67,7 +78,14 @@ public class Course {
         this.courseId = courseId;
     }
 
+
+    /**
+     * @param other, a Course object
+     * @return true if objects are equal, else false
+     * comparation based on id (unique identifier)
+     */
     public boolean compareTo(Course other) {
+        /* comparing based on id */
         if(this.courseId ==  other.getCourseId())
             return true;
         return false;

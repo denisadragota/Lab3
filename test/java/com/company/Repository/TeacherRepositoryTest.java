@@ -15,6 +15,15 @@ import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * TeacherRepositoryTest class
+ * test TeacherRepository class
+ *
+ * @version
+ *          30.10.2021
+ * @author
+ *          Denisa Dragota
+ */
 class TeacherRepositoryTest {
     private Teacher teacher1;
     private Teacher teacher2;
@@ -22,6 +31,9 @@ class TeacherRepositoryTest {
 
     private TeacherRepository teacher_repo;
 
+    /**
+     * create instances for testing before each test method
+     */
     @BeforeEach
     void createInstances(){
         /*creating instances*/
@@ -36,6 +48,9 @@ class TeacherRepositoryTest {
         teacher_repo=new TeacherRepository(teachers);
     }
 
+    /**
+     * test findAll() method
+     */
     @Test
     void findAll(){
         /*creating the expected result list */
@@ -47,6 +62,9 @@ class TeacherRepositoryTest {
         assertArrayEquals(teachers,((Collection<?>)teacher_repo.findAll()).toArray());
     }
 
+    /**
+     * test findOne() method
+     */
     @Test
     void findOne() {
         /* search for existing teacher id */
@@ -64,6 +82,9 @@ class TeacherRepositoryTest {
         }
     }
 
+    /**
+     * test save() method
+     */
     @Test
     void save(){
         /* save teacher_repo size at the beginning */
@@ -88,6 +109,9 @@ class TeacherRepositoryTest {
         }
     }
 
+    /**
+     * test update() method
+     */
     @Test
     void update() {
         /* try to update a teacher that does not exist in the repo */
@@ -110,6 +134,9 @@ class TeacherRepositoryTest {
         }
     }
 
+    /**
+     * test delete() method
+     */
     @Test
     void delete(){
         /* try to delete a non-existing teacherId in the repo */
