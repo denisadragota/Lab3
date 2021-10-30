@@ -10,6 +10,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TeacherTest {
+    /*creating instances*/
     private static Teacher teacher1;
     private static Teacher teacher2;
 

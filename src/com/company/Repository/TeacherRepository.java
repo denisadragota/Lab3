@@ -1,6 +1,7 @@
 package com.company.Repository;
 
 
+import com.company.Exceptions.NullException;
 import com.company.Model.Teacher;
 
 import java.util.List;
@@ -11,7 +12,11 @@ public class TeacherRepository extends InMemoryRepository<Teacher>{
         }
 
         @Override
-        public Teacher findOne(Long id) {
+        public Teacher findOne(Long id) throws NullException {
+
+            if(id==null)
+                throw new NullException("Null id!");
+
             for(Teacher t: this.repoList)
             {
                 if(t.getTeacherId()==id)
@@ -21,7 +26,9 @@ public class TeacherRepository extends InMemoryRepository<Teacher>{
         }
 
         @Override
-        public Teacher save(Teacher obj) {
+        public Teacher save(Teacher obj) throws NullException {
+            if(obj==null)
+                throw new NullException("Null obj!");
             if (this.findOne(obj.getTeacherId()) != null)
                 return obj;
             this.repoList.add(obj);
@@ -29,7 +36,9 @@ public class TeacherRepository extends InMemoryRepository<Teacher>{
         }
 
         @Override
-        public Teacher update(Teacher obj) {
+        public Teacher update(Teacher obj) throws NullException {
+            if(obj==null)
+                throw new NullException("Null object!");
             Teacher teacher = this.findOne(obj.getTeacherId());
             if (teacher == null)
                 return obj;
@@ -39,7 +48,9 @@ public class TeacherRepository extends InMemoryRepository<Teacher>{
         }
 
         @Override
-        public Teacher delete(Long id) {
+        public Teacher delete(Long id) throws NullException {
+            if(id==null)
+                throw new NullException("Null id!");
             if (this.findOne(id) == null)
                 return null;
             Teacher toDelete=this.findOne(id);

@@ -1,5 +1,7 @@
 package com.company.Controller;
 
+import com.company.Exceptions.InputException;
+import com.company.Exceptions.NullException;
 import com.company.Model.Course;
 import com.company.Model.Student;
 import com.company.Model.Teacher;
@@ -9,6 +11,7 @@ import com.company.Repository.TeacherRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RegistrationSystem {
     private StudentRepository studentsRepo;
@@ -21,41 +24,53 @@ public class RegistrationSystem {
         this.coursesRepo = coursesRepo;
     }
 
-    public boolean register(Course course, Student student){
+    public boolean register(Course course, Student student) throws InputException {
 
         List<Student> courseStudents =  course.getStudentsEnrolled();
         //check if course exists
-        if(coursesRepo.findOne(course.getCourseId())==null)
-        {
-            return false;
+        try {
+            if (coursesRepo.findOne(course.getCourseId()) == null) {
+                throw new InputException("Non-existing course id!");
+            }
+        } catch(NullException e){
+            System.out.println(e.getMessage());
         }
         //check if student exists
-        if(studentsRepo.findOne(student.getStudentId())==null)
-        {
-            return false;
+        try{
+            if(studentsRepo.findOne(student.getStudentId())==null)
+            {
+                throw new InputException("Non-existing student id!");
+            }
+
+        }catch(NullException e){
+            System.out.println(e.getMessage());
         }
 
         //check if course has free places
         if (courseStudents.size() == course.getMaxEnrollment()) {
-            return false;
+            throw new InputException("Course has no free places!");
         }
 
         //check if student is already enrolled
         for(Student s: courseStudents) {
             if (s.compareTo(student))
-                return false;
+                throw new InputException("Student already enrolled!");
         }
 
         //if student has over 30 credits after enrolling to this course
         int studCredits=student.getTotalCredits()+course.getCredits();
         if(studCredits > 30)
-            return false;
+            throw new InputException("Total number of credits exceeded!");;
 
         //add student to course
         //update courses repo
         courseStudents.add(student);
         course.setStudentsEnrolled(courseStudents);
-        coursesRepo.update(course);
+        try {
+            coursesRepo.update(course);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
 
         //update total credits of student
         student.setTotalCredits(studCredits);
@@ -66,14 +81,19 @@ public class RegistrationSystem {
         student.setEnrolledCourses(studCourses);
 
         //update students Repo
-        studentsRepo.update(student);
+        try{
+        studentsRepo.update(student);}
+        catch(NullException e){
+            System.out.println(e.getMessage());
+        }
 
         return true;
     }
     public List<Course> retrieveCoursesWithFreePlaces(){
         List<Course> freePlaces = new ArrayList<>();
 
-        for(Course c:coursesRepo.findAll()){
+        for (Course c:coursesRepo.findAll()){
+
             if(c.getStudentsEnrolled().size()<c.getMaxEnrollment())
                 freePlaces.add(c);
         }
@@ -81,10 +101,126 @@ public class RegistrationSystem {
     }
 
     public List<Student> retrieveStudentsEnrolledForACourse(Course course) {
-        if (coursesRepo.findOne(course.getCourseId()) != null) {
-            return course.getStudentsEnrolled();
+        try {
+            if (coursesRepo.findOne(course.getCourseId()) != null) {
+                return course.getStudentsEnrolled();
+            }
+        }catch(NullException e){
+            System.out.println(e.getMessage());
         }
         return null;
+    }
+
+
+    //deleted course from CourseRepo, from the Students and from the teacher
+    public boolean deleteCourseFromTeacher(Teacher teacher, Course course) throws InputException{
+
+        //check if course exists
+        try {
+            if (coursesRepo.findOne(course.getCourseId()) == null) {
+                throw new InputException("Non-existing course id!");
+            }
+        }catch (NullException e){
+            System.out.println(e.getMessage());
+        }
+        //check if teacher exists
+        try {
+            if (teachersRepo.findOne(teacher.getTeacherId()) == null) {
+                throw new InputException("Non-existing teacher id!");
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        //check if course actually is in the teacher's list of courses
+        List<Course> courseList = teacher.getCourses();
+        Optional<Course> c = courseList.stream().filter(el-> el.compareTo(course)).findFirst();
+
+        // course not found in teacher courses list
+        if(c.isEmpty())
+            throw new InputException("Course id not corresponding to teacher id!");
+        else
+        {   //delete course from teacher's list
+            List<Student> studentsEnrolled= course.getStudentsEnrolled(); //store students enrolled
+            courseList.remove(c.get());
+            teacher.setCourses(courseList);
+            try {
+                teachersRepo.update(teacher);
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+
+            //delete course from Course Repo
+            try {
+                coursesRepo.delete(course.getCourseId());
+            }catch(NullException e){
+                System.out.println(e.getMessage());
+            }
+
+            //delete course from all students enrolled
+            for(Student s:studentsEnrolled) {
+
+                List<Course> coursesEnrolled= s.getEnrolledCourses();
+                coursesEnrolled.remove(course);
+                //update student with the new courses enrolled list and the new credits
+                s.setEnrolledCourses(coursesEnrolled);
+                s.setTotalCredits(s.getTotalCredits()-course.getCredits());
+
+                //update in the Repo
+                try {
+                    this.studentsRepo.update(s);
+                }catch(NullException e){
+                    System.out.println(e.getMessage());
+                }
+                }
+            return true;
+        }
+    }
+
+    public void updateStudentsCredits() {
+        List<Student> stud = this.getAllStudents();
+        //looping through all students of the repo
+        for (Student s : stud ) {
+
+            List<Course> coursesEnrolled = s.getEnrolledCourses();
+            int sum = 0;
+            //looping through all enrolled courses of each student
+            for (Course c : coursesEnrolled) {
+                //calculate the total sum of credits
+                sum += c.getCredits();
+            }
+
+            //update the total sum of credits for the student
+            s.setTotalCredits(sum);
+
+            //update in the repo
+            try {
+                studentsRepo.update(s);
+            }catch(NullException e){
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    public void modifyCredits(Course c){
+        /* update course in the repo */
+        try {
+            this.coursesRepo.update(c);
+        }catch(NullException e){
+            System.out.println(e.getMessage());
+        }
+
+        /*update all students*/
+        this.updateStudentsCredits();
+    }
+
+
+    public List<Student> getAllStudents(){
+        ArrayList<Student> allStudents= new ArrayList<>();
+        for (Student s: this.studentsRepo.findAll()){
+            allStudents.add(s);
+        }
+        return allStudents;
     }
 
     public List<Course> getAllCourses(){
@@ -95,81 +231,40 @@ public class RegistrationSystem {
         return allCourses;
     }
 
-    public void updateStudentsCredits() {
-        for (Student s : this.studentsRepo.findAll()) {
-            //System.out.println(s.getEnrolledCourses());
-            List<Course> coursesEnrolled = s.getEnrolledCourses();
-            int sum = 0;
-            for (Course c : coursesEnrolled) {
-                sum += c.getCredits();
-            }
-
-            s.setTotalCredits(sum);
-            studentsRepo.update(s);
+    public List<Teacher> getAllTeachers(){
+        ArrayList<Teacher> allTeachers= new ArrayList<>();
+        for (Teacher t: this.teachersRepo.findAll()){
+            allTeachers.add(t);
         }
+        return allTeachers;
     }
-    //deleted course from CourseRepo, from the Students and from the teacher
-    public boolean deleteCourseFromTeacher(Teacher teacher, Course course) {
-
-        //check if course exists
-        if(coursesRepo.findOne(course.getCourseId())==null)
-        {
-            return false;
-        }
-        //check if teacher exists
-        if(teachersRepo.findOne(teacher.getTeacherId())==null)
-        {
-            return false;
+    public Student findOneStudent(long id){
+        try {
+            return this.studentsRepo.findOne(id);
+        }catch (NullException e){
+            System.out.println(e.getMessage());
+            return null;
         }
 
-        //check if course actually is in the teacher's list of courses
-        //delete course from teacher's list
-        boolean found=false;
-        List<Course> courseList = teacher.getCourses();
-        for (Course c : courseList) {
-            if (c.compareTo(course)) {
-                found=true;
-                //update teacher repo
-                courseList.remove(c);
-                teacher.setCourses(courseList);
-                teachersRepo.update(teacher);
-            }
-        }
-        if(!found)
-            return false;
-
-        //delete course from Course Repo
-        coursesRepo.delete(course.getCourseId());
-
-        //delete course from all students enrolled
-        for(Student s:studentsRepo.findAll()) {
-            List<Course> coursesEnrolled = s.getEnrolledCourses();
-            for (Course c : coursesEnrolled) {
-                if (c.compareTo(course)) { //student enrolled to the course
-                    coursesEnrolled.remove(course);
-                }
-            }
-            //update student with the new courses enrolled list
-            s.setEnrolledCourses(coursesEnrolled);
-            this.studentsRepo.update(s);
-        }
-
-        //the total credits of some students got updated
-        this.updateStudentsCredits();
-
-        return true;
     }
 
-    public Student findOneStudent(Long id){
-        return this.studentsRepo.findOne(id);
+    public Course findOneCourse(long id){
+        try {
+            return this.coursesRepo.findOne(id);
+        }catch(NullException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
-    public Course findOneCourse(Long id){
-        return this.coursesRepo.findOne(id);
-    }
+    public Teacher findOneTeacher(long id){
+        try{
+            return this.teachersRepo.findOne(id);
+        }catch(NullException e){
+            System.out.println(e.getMessage());
+            return null;
+       }
 
-    public Teacher findOneTeacher(Long id){
-        return this.teachersRepo.findOne(id);
     }
 
 

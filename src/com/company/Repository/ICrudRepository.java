@@ -1,5 +1,6 @@
 package com.company.Repository;
 
+import com.company.Exceptions.NullException;
 
 /**
  * CRUD operations repository interface
@@ -11,7 +12,7 @@ public interface ICrudRepository<T> {
      *
      */
 
-    T findOne(Long id);
+    T findOne(Long id) throws NullException;
     /**
      * @return all entities
      */
@@ -23,13 +24,13 @@ public interface ICrudRepository<T> {
      *
      */
 
-    T save(T obj);
+    T save(T obj)throws NullException;
     /**
      * @param obj entity must not be null
      * @return null - if the entity is updated, otherwise returns the entity - (e.g id does not exist).
      *
      */
-    T update(T obj);
+    T update(T obj)throws NullException;
     /**
      * removes the entity with the specified id
      *
@@ -37,5 +38,5 @@ public interface ICrudRepository<T> {
      * @return the removed entity or null if there is no entity with the given id
      *
      */
-    T delete(Long id);
+    T delete(Long id)throws NullException;
 }

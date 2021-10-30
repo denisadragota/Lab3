@@ -1,5 +1,6 @@
 package com.company.Repository;
 
+import com.company.Exceptions.NullException;
 import com.company.Model.Student;
 
 import java.util.List;
@@ -11,7 +12,11 @@ public class StudentRepository extends InMemoryRepository<Student>{
     }
 
     @Override
-    public Student findOne(Long id) {
+    public Student findOne(Long id) throws NullException {
+        if (id == null) {
+            throw new NullException("Null id!");
+        }
+
         for(Student s: this.repoList)
         {
             if(s.getStudentId()==id)
@@ -21,7 +26,10 @@ public class StudentRepository extends InMemoryRepository<Student>{
     }
 
     @Override
-    public Student save(Student obj) {
+    public Student save(Student obj) throws NullException {
+        if(obj==null)
+            throw new NullException("Null object!");
+
         if (this.findOne(obj.getStudentId()) != null)
             return obj;
         this.repoList.add(obj);
@@ -29,7 +37,10 @@ public class StudentRepository extends InMemoryRepository<Student>{
     }
 
     @Override
-    public Student update(Student obj) {
+    public Student update(Student obj)throws NullException {
+        if(obj == null)
+            throw new NullException("Null Object");
+
         Student student = this.findOne(obj.getStudentId());
         if (student == null)
             return obj;
@@ -39,7 +50,9 @@ public class StudentRepository extends InMemoryRepository<Student>{
     }
 
     @Override
-    public Student delete(Long id) {
+    public Student delete(Long id) throws NullException{
+        if(id == null)
+            throw new NullException("Null id");
         if (this.findOne(id) == null)
             return null;
         Student toDelete=this.findOne(id);
