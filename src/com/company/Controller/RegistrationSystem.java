@@ -75,8 +75,8 @@ public class RegistrationSystem {
         }
 
         //check if student is already enrolled
-        for(Student s: courseStudents) {
-            if (s.compareTo(student))
+        for(Student stud: courseStudents) {
+            if (stud.compareTo(student))
                 throw new InputException("Student already enrolled!");
         }
 
@@ -121,9 +121,9 @@ public class RegistrationSystem {
     public List<Course> retrieveCoursesWithFreePlaces(){
         List<Course> freePlaces = new ArrayList<>();
         
-        for (Course c:coursesRepo.findAll()){
-            if(c.getStudentsEnrolled().size()<c.getMaxEnrollment())
-                freePlaces.add(c);
+        for (Course course:coursesRepo.findAll()){
+            if(course.getStudentsEnrolled().size()<course.getMaxEnrollment())
+                freePlaces.add(course);
         }
         return freePlaces;
     }
@@ -204,18 +204,18 @@ public class RegistrationSystem {
             }
 
             //delete course from all students enrolled
-            for(Student s:studentsEnrolled) {
+            for(Student stud:studentsEnrolled) {
 
-                List<Course> coursesEnrolled= s.getEnrolledCourses();
+                List<Course> coursesEnrolled= stud.getEnrolledCourses();
                 coursesEnrolled.remove(course);
                 
                 //update student with the new courses enrolled list and the new credits
-                s.setEnrolledCourses(coursesEnrolled);
-                s.setTotalCredits(s.getTotalCredits()-course.getCredits());
+                stud.setEnrolledCourses(coursesEnrolled);
+                stud.setTotalCredits(stud.getTotalCredits()-course.getCredits());
 
                 //update in the Repo
                 try {
-                    this.studentsRepo.update(s);
+                    this.studentsRepo.update(stud);
                 }catch(NullException e){
                     System.out.println(e.getMessage());
                 }
@@ -231,21 +231,21 @@ public class RegistrationSystem {
     public void updateStudentsCredits() {
         List<Student> stud = this.getAllStudents();
         
-        for (Student s : stud ) {
-            List<Course> coursesEnrolled = s.getEnrolledCourses();
+        for (Student student : stud ) {
+            List<Course> coursesEnrolled = student.getEnrolledCourses();
             int sum = 0;
           
-            for (Course c : coursesEnrolled) {
+            for (Course course : coursesEnrolled) {
                 //calculate the total sum of credits for each student
-                sum += c.getCredits();
+                sum += course.getCredits();
             }
 
             //update the total sum of credits for the student
-            s.setTotalCredits(sum);
+            student.setTotalCredits(sum);
 
             //update in the repo
             try {
-                studentsRepo.update(s);
+                studentsRepo.update(student);
             }catch(NullException e){
                 System.out.println(e.getMessage());
             }
@@ -275,8 +275,8 @@ public class RegistrationSystem {
      */
     public List<Student> getAllStudents(){
         ArrayList<Student> allStudents= new ArrayList<>();
-        for (Student s: this.studentsRepo.findAll()){
-            allStudents.add(s);
+        for (Student stud: this.studentsRepo.findAll()){
+            allStudents.add(stud);
         }
         return allStudents;
     }
@@ -287,8 +287,8 @@ public class RegistrationSystem {
      */
     public List<Course> getAllCourses(){
         ArrayList<Course> allCourses= new ArrayList<>();
-        for (Course c: this.coursesRepo.findAll()){
-            allCourses.add(c);
+        for (Course course: this.coursesRepo.findAll()){
+            allCourses.add(course);
         }
         return allCourses;
     }
@@ -299,8 +299,8 @@ public class RegistrationSystem {
      */
     public List<Teacher> getAllTeachers(){
         ArrayList<Teacher> allTeachers= new ArrayList<>();
-        for (Teacher t: this.teachersRepo.findAll()){
-            allTeachers.add(t);
+        for (Teacher teaxher: this.teachersRepo.findAll()){
+            allTeachers.add(teacher);
         }
         return allTeachers;
     }
