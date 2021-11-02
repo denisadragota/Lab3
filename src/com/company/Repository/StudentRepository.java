@@ -34,10 +34,10 @@ public class StudentRepository extends InMemoryRepository<Student>{
         }
 
 
-        for(Student s: this.repoList)
+        for(Student stud: this.repoList)
         {
-            if(s.getStudentId()==id)
-                return s;
+            if(stud.getStudentId()==id)
+                return stud;
         }
         return null;
     }
