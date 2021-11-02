@@ -80,9 +80,9 @@ public class Course {
 
 
     /**
+     * comparation based on id (unique identifier)
      * @param other, a Course object
      * @return true if objects are equal, else false
-     * comparation based on id (unique identifier)
      */
     public boolean compareTo(Course other) {
         /* comparing based on id */
