@@ -49,9 +49,9 @@ public class Teacher extends Person{
     }
 
     /**
+     * comparation based on id (unique identifier)
      * @param other, Teacher object to compare with
      * @return true if objects are equal, else false
-     * comparation based on id (unique identifier)
      */
     public boolean compareTo(Teacher other) {
         /* comparing id */
