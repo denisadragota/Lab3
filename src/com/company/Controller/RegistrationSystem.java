@@ -38,6 +38,7 @@ public class RegistrationSystem {
     }
 
     /**
+     * desc: enroll a student to a course 
      * @param course , Course object
      * @param student, Student object
      * @return true if successfully enroled, else false
@@ -113,15 +114,14 @@ public class RegistrationSystem {
     }
 
     /**
+     * desc: find courses from the course repo where number of enrolled students < maximum enroll limit
      * @return courses with free places
-     * find courses from the course repo where number of enrolled students < maximum enroll limit
+     * 
      */
     public List<Course> retrieveCoursesWithFreePlaces(){
         List<Course> freePlaces = new ArrayList<>();
-
-        /* looping through courses in repo list */
+        
         for (Course c:coursesRepo.findAll()){
-            /* comparing number of enrolled students with the limit */
             if(c.getStudentsEnrolled().size()<c.getMaxEnrollment())
                 freePlaces.add(c);
         }
@@ -129,6 +129,7 @@ public class RegistrationSystem {
     }
 
     /**
+     * desc: retrieve all students enrolled to a course
      * @param course Course object
      * @return list of students enrolled to the given course, or null if course is NULL
      */
@@ -146,6 +147,9 @@ public class RegistrationSystem {
 
 
     /**
+     * desc: Delete a course from a teacher. Removing course from the teacher's courses list, from the students' enrolled lists and from the course repo
+     * Update number of credits of certain students
+     *
      * @param teacher  Teacher object from whom we delete a course
      * @param course  Course object, from the teacher's list, to be deleted
      * @return true if successfully deleted
@@ -153,8 +157,6 @@ public class RegistrationSystem {
      * or if the course does not correspond to that teacher
      * deleting course from the teacher's teaching list, from the students enrolled list and from the courses repo
      *
-     * Removing course from the teacher's courses list, from the students' enrolled lists and from the course repo
-     * Update number of credits of certain students
      */
 
     public boolean deleteCourseFromTeacher(Teacher teacher, Course course) throws InputException{
@@ -206,6 +208,7 @@ public class RegistrationSystem {
 
                 List<Course> coursesEnrolled= s.getEnrolledCourses();
                 coursesEnrolled.remove(course);
+                
                 //update student with the new courses enrolled list and the new credits
                 s.setEnrolledCourses(coursesEnrolled);
                 s.setTotalCredits(s.getTotalCredits()-course.getCredits());
@@ -222,19 +225,18 @@ public class RegistrationSystem {
     }
 
     /**
-     * Recalculate the sum of credits provided from the enrolled courses of the students
+     * desc: Recalculate the sum of credits provided from the enrolled courses of the students
      * Update the credits sum for each student
      */
     public void updateStudentsCredits() {
         List<Student> stud = this.getAllStudents();
-        //looping through all students of the repo
+        
         for (Student s : stud ) {
-
             List<Course> coursesEnrolled = s.getEnrolledCourses();
             int sum = 0;
-            //looping through all enrolled courses of each student
+          
             for (Course c : coursesEnrolled) {
-                //calculate the total sum of credits
+                //calculate the total sum of credits for each student
                 sum += c.getCredits();
             }
 
@@ -251,9 +253,8 @@ public class RegistrationSystem {
     }
 
     /**
+     * desc: modifying credit number for a course, that leads to updating repo with the updated course and updating students' credits 
      * @param c Course object, which credits were updated
-     * Updating repo with the updated course
-     * Updating students credits
      */
     public void modifyCredits(Course c){
         /* update course in the repo */
@@ -269,6 +270,7 @@ public class RegistrationSystem {
 
 
     /**
+     * desc: get all students from the repo
      * @return student list from the student repo
      */
     public List<Student> getAllStudents(){
@@ -280,6 +282,7 @@ public class RegistrationSystem {
     }
 
     /**
+     * desc: get all courses from the repo
      * @return courses list from the course repo
      */
     public List<Course> getAllCourses(){
@@ -291,6 +294,7 @@ public class RegistrationSystem {
     }
 
     /**
+     * get all teachers from the repo
      * @return teachers list from teh teacher repo
      */
     public List<Teacher> getAllTeachers(){
@@ -303,6 +307,7 @@ public class RegistrationSystem {
 
 
     /**
+     * searching for a student in the repo by the id
      * @param id of a Student object
      * @return Student object from the student repo list with the given id
      */
@@ -317,6 +322,7 @@ public class RegistrationSystem {
     }
 
     /**
+     * desc: searching for a course in the repo by the id
      * @param id of a Course object
      * @return Course object from the course repo list with the given id
      */
@@ -330,6 +336,7 @@ public class RegistrationSystem {
     }
 
     /**
+     * desc: searching for a teacher in the repo by the id
      * @param id of a Teacher object
      * @return Teacher object from the teacher repo list with the given id
      */
