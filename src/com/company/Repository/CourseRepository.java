@@ -34,7 +34,7 @@ public class CourseRepository extends InMemoryRepository<Course>{
         for(Course course: this.repoList)
         {
             if(course.getCourseId()==id)
-                return c;
+                return course;
         }
         return null;
     }
