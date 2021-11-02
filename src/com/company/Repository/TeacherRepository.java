@@ -32,10 +32,10 @@ public class TeacherRepository extends InMemoryRepository<Teacher>{
                 throw new NullException("Null id!");
 
            
-            for(Teacher t: this.repoList)
+            for(Teacher teacher: this.repoList)
             {
-                if(t.getTeacherId()==id)
-                    return t;
+                if(teacher.getTeacherId()==id)
+                    return teacher;
             }
             return null;
         }
